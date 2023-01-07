@@ -1,0 +1,54 @@
+{
+    "name": "MainInput",
+    "maps": [
+        {
+            "name": "Movement",
+            "id": "a6ef4385-c473-4664-bc6e-da0bf665cfb7",
+            "actions": [
+                {
+                    "name": "Left",
+                    "type": "Button",
+                    "id": "9c3abeb4-4794-41d4-b33a-ea08ee0a49bd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Right",
+                    "type": "Button",
+                    "id": "63eba761-6640-42ae-9de3-b57fcc9ceacb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "03eb0c49-0f6c-4c4f-a197-d1eb5f439e76",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd4f4f20-afdc-47f0-8df4-91b31c19dfe1",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
