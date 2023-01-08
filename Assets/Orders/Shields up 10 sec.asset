@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd81413dd94147f7a49389cd8f381d59, type: 3}
+  m_Name: Shields up 10 sec
+  m_EditorClassIdentifier: 
+  type: 1
+  timeToWaitAfter: 15
+  acceptableDownTime: 10
+  hasBeenFulfilled: 0
+  isVictory: 0
+  requestedPowerAmt: 2
+  message: 'Captain''s orders: Shields up, full power, quickly!'

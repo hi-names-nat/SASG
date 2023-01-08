@@ -65,6 +65,12 @@ public class MoveBetweenPoints : MonoBehaviour
     private void Update()
     {
         _currentTime += Time.deltaTime;
-        transform.position = Vector3.Lerp(_startPos, points[_currentPoint].transform.position, _currentTime / movementTime);
+        Vector3 dir =  points[_currentPoint].transform.position - _startPos;
+        if (!(Vector3.Distance(transform.position, points[_currentPoint].transform.position) <= .5f))
+            transform.position += dir.normalized * Time.deltaTime * movementTime;
+        else
+        {
+            transform.position = points[_currentPoint].transform.position;
+        }
     }
 }

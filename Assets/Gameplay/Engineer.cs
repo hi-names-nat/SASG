@@ -9,6 +9,7 @@ namespace Gameplay
     [CreateAssetMenu(fileName = "New Engineer", menuName = "SASG/Engineer", order = 0)]
     public class Engineer : SerializedScriptableObject
     {
+        public string Name = "Invalid Name";
         [OdinSerialize] public Dictionary<ComponentTypes, int> SkillDict;
         public ShipComponent currentAssigned = null;
 

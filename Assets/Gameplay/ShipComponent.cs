@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -23,17 +24,33 @@ namespace Gameplay
         public bool isBroken = false;
         private int PowerInput = 1;
         [SerializeField] private ComponentTypes type = ComponentTypes.None;
-        [SerializeField] private float breakageChance = .4f;
+        private float breakageChance = .4f;
+        [SerializeField] private float standardBreakageChance = .4f;
+        [SerializeField] private float lowPowerBreakageChance = .1f;
+        [SerializeField] private float overclockBreakageChance = .6f;
+        [SerializeField] private int lowPowerCost = 2;
+        [SerializeField] private int MedPowerCost = 4;
+        [SerializeField] private int HiPowerCost = 8;
+        [SerializeField] private float noPowerBreakChance = .2f;
+        [SerializeField] private WarningUI _warningUI;
+        private int currentPowerCost;
+        
+
         [SerializeField] private ShipManager Ship;
-        private float EngineerModifier;
+        [SerializeField, ReadOnly] private float EngineerModifier = 1;
+        [SerializeField, ReadOnly] private int numEngineersAssigned = 0;
+
         [SerializeField] private float repairTime = 15f;
         private float currentRepairTime;
+
+        [SerializeField] private ComponentStatusUI _statusUI;
 
         public ComponentTypes Type => type;
 
         private void Awake()
         {
-            
+            currentPowerCost = MedPowerCost;
+            _statusUI.SetPowerInput(MedPowerCost);
         }
 
         private void Start()
@@ -43,18 +60,47 @@ namespace Gameplay
 
         public void SetPowerInput(int newInput)
         {
-            if (newInput is <= 0 or >= 3) return;
+            if (newInput is < 0 or >= 3) return;
             PowerInput = newInput;
+            switch (PowerInput)
+            {
+                case 0:
+                    breakageChance = lowPowerBreakageChance;
+                    _statusUI.SetPowerInput(lowPowerCost);
+                    break;
+                case 1:
+                    breakageChance = standardBreakageChance;
+                    _statusUI.SetPowerInput(MedPowerCost);
+                    break;
+                case 2:
+                    breakageChance = overclockBreakageChance;
+                    _statusUI.SetPowerInput(HiPowerCost);
+                    break;
+            }
+        }
+
+        public int GetPowerInput()
+        {
+            return PowerInput;
+        }
+
+        private void Update()
+        {
+            currentRepairTime += Time.deltaTime * numEngineersAssigned;
         }
 
         private void Tick()
         {
-            if (PowerInput == 1) return;
-            if (!isBroken && breakageChance / EngineerModifier <= Random.value)
+
+            if (!isBroken && (breakageChance) / EngineerModifier >= Random.value)
             {
                 isBroken = true;
-                repairTime = 0;
+                currentRepairTime = 0;
+                _statusUI.OnComponentBreak();
+                _warningUI.EnableComponentWarning(true);
             }
+            
+
             
             switch (type)
             {
@@ -66,23 +112,39 @@ namespace Gameplay
                     break;
             }
 
-            if (!isBroken || EngineerModifier == 0) return;
+            if (!isBroken)
+            {
+                var success = Ship.UsePower(currentPowerCost);
+                if (!success && Random.value >= noPowerBreakChance) Break();
+                return;
+            }
             
-            currentRepairTime += Time.deltaTime * EngineerModifier;
             if (currentRepairTime >= repairTime)
             {
                 isBroken = false;
+                _statusUI.OnComponentFixed();
+                _warningUI.EnableComponentWarning(false);
             }
+            
+        }
+
+        public void Break()
+        {
+            isBroken = true;
+            _statusUI.OnComponentBreak();
+            _warningUI.EnableComponentWarning(true);
         }
 
         public void AddEngineerModifier(float modifier)
         {
             EngineerModifier += modifier;
+            numEngineersAssigned++;
         }
 
         public void RemoveEngineerModifier(float modifier)
         {
             EngineerModifier -= modifier;
+            numEngineersAssigned--;
         }
     }
 }
